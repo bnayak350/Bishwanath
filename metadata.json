@@ -1,0 +1,6 @@
+{
+  "name": "My Khata – Expense Tracker",
+  "description": "Personal and family income and expenditure tracker with Indian Rupee formatting, Odia and English localization, offline-first storage, exact paise arithmetic, budgets, and reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

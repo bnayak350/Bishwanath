@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+  </defs>
+  <!-- Full bleed background for Android masking -->
+  <rect width="512" height="512" fill="url(#grad2)" />
+  <!-- Centered Rupee symbol in safe zone -->
+  <text x="50%" y="58%" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="230" font-weight="900" fill="#ffffff" dy=".1em">₹</text>
+</svg>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloading My Khata APK...</title>
+  <link rel="icon" type="image/png" href="/app-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #090d16 0%, #0f172a 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 1.5rem;
+      max-width: 440px;
+      width: 100%;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 1.25rem;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      border: 2px solid rgba(255,255,255,0.15);
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+    .tagline {
+      font-size: 0.8rem;
+      color: #34d399;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: #334155;
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      border-radius: 9999px;
+      animation: progress 2s infinite ease-in-out;
+    }
+    @keyframes progress {
+      0% { transform: translateX(-100%); width: 40%; }
+      50% { width: 70%; }
+      100% { transform: translateX(250%); width: 40%; }
+    }
+    .btn-download {
+      display: block;
+      width: 100%;
+      background: #10b981;
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.85rem 1.25rem;
+      border-radius: 0.85rem;
+      box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-download:hover {
+      background: #059669;
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    .meta-info {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+    .instructions {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #334155;
+      text-align: left;
+    }
+    .instructions h2 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .instructions ol {
+      padding-left: 1.25rem;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .instructions li {
+      margin-bottom: 0.35rem;
+    }
+    .app-link {
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+    }
+    .app-link a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+    .app-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <img src="/app-logo.png" alt="My Khata" class="logo">
+    <h1>My Khata – Expense Tracker</h1>
+    <div class="tagline">Track • Save • Grow</div>
+
+    <div class="status-badge" id="statusBadge">
+      <span>●</span> <span id="statusText">Download starting automatically...</span>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+
+    <a id="downloadBtn" href="/My_Khata.apk" download="My_Khata.apk" class="btn-download">
+      Download My_Khata.apk (Instant)
+    </a>
+
+    <div class="meta-info">
+      <div>File: <strong>My_Khata.apk</strong> • 1.62 MB (Verified v1+v2+v3 Signature)</div>
+      <div>Package: <code>com.mydailykhata.app</code> • Android 5.0+</div>
+    </div>
+
+    <div class="instructions">
+      <h2>How to Install on Android</h2>
+      <ol>
+        <li>Wait for <strong>My_Khata.apk</strong> to finish downloading.</li>
+        <li>Tap the downloaded file from your browser downloads or notification bar.</li>
+        <li>If prompted, tap <strong>Settings</strong> and allow <strong>"Install unknown apps"</strong>.</li>
+        <li>Tap <strong>Install</strong> and open <strong>My Khata</strong>.</li>
+      </ol>
+    </div>
+
+    <div class="app-link">
+      <a href="/">← Return to Web Application</a>
+    </div>
+  </div>
+
+  <script>
+    function triggerDownload() {
+      // Create hidden anchor to force direct download
+      var link = document.createElement('a');
+      link.href = '/My_Khata.apk';
+      link.download = 'My_Khata.apk';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(function() {
+        var badge = document.getElementById('statusBadge');
+        var text = document.getElementById('statusText');
+        if (text) {
+          text.innerText = 'Download started! Check notifications.';
+        }
+      }, 1000);
+    }
+
+    // Auto-trigger immediately on load and after 400ms delay
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(triggerDownload, 400);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1342 @@
+# FINAL MASTER DEVELOPMENT PROMPT
+## My Daily Khata – Expense Tracker
+**Version:** 1.0  
+**Platform:** Flutter for Android and iOS  
+**Primary currency:** Indian Rupees (INR — ₹)  
+**Languages:** English and Odia (ଓଡ଼ିଆ)  
+**Storage:** Offline-first local database with optional secure cloud backup  
+**Security:** PIN and biometric authentication  
+**Application type:** Personal and family finance management
+
+---
+
+# 1. YOUR ROLE
+
+Act as a senior Flutter engineer, mobile UI/UX designer, database architect, financial software developer, cybersecurity engineer, and quality assurance specialist.
+
+Build a complete, production-ready mobile application named **My Daily Khata – Expense Tracker**.
+
+The app must enable individuals and families to record everyday income and expenditure, manage household budgets, track savings, review payment methods, monitor spending patterns, and generate accurate financial reports.
+
+Deliver functional source code, a working application, persistent storage, automated tests, and build instructions.
+
+Do not deliver only a prototype, static dashboard, or non-functional UI.
+
+## 1.1 Mandatory currency policy
+
+Use Indian Rupees exclusively throughout the application.
+
+- Currency code: `INR`
+- Currency symbol: `₹`
+- Locale for monetary formatting: `en_IN`
+- Number grouping: Indian lakh/crore grouping
+- Date format: `dd-MM-yyyy`
+- Time format: 12-hour or 24-hour, according to user preference
+- Currency selection: Disabled; INR is permanently fixed
+
+Examples:
+
+| Numeric value | Required display |
+|---:|---:|
+| 50 | ₹50.00 |
+| 500 | ₹500.00 |
+| 12500 | ₹12,500.00 |
+| 125000 | ₹1,25,000.00 |
+| 1234567 | ₹12,34,567.00 |
+| 123456789 | ₹12,34,56,789.00 |
+
+On compact dashboard cards, insignificant decimal places may be omitted: for example, ₹1,25,000. Never sacrifice Indian grouping.
+
+Never show USD, $, EUR, or any foreign currency in monetary fields, charts, reports, notifications, exports, receipts, or sample data.
+
+Use the English locale for numeric currency formatting in both English and Odia language modes. Translate labels and descriptions into the selected language.
+
+# 2. TECHNOLOGY STACK
+
+Use the following architecture unless a documented compatibility issue requires an equivalent replacement.
+
+### Mobile application
+- Flutter stable channel.
+- Dart with null safety.
+- Material 3 design system.
+- Feature-based architecture.
+- Riverpod for state management and dependency injection.
+- GoRouter for navigation.
+- Flutter localization using ARB files and generated localization classes.
+
+### Local database
+- SQLite through Drift or another reliable, type-safe SQLite abstraction.
+- Schema migrations with version tracking.
+- Database transactions for financial updates.
+- Indexed queries for dates, transaction types, categories, and family members.
+
+### Cloud backup
+- Supabase with PostgreSQL, authenticated access, and Row Level Security.
+- Cloud synchronization must be optional.
+- Local transactions must remain functional when the internet is unavailable.
+- Provide retry handling, conflict resolution, and duplicate prevention.
+- Do not expose privileged cloud service keys in the application.
+
+### Supporting packages
+Select compatible, maintained packages for:
+- Secure credential storage.
+- PIN protection and biometric authentication.
+- Local notifications.
+- PDF generation.
+- CSV export.
+- File sharing.
+- Receipt image attachment.
+- Chart rendering.
+- Connectivity awareness.
+- Automated unit, widget, and integration tests.
+
+Before implementation, verify package compatibility with the selected Flutter SDK and supported Android/iOS versions. Pin dependency versions and document the chosen packages.
+
+# 3. APPLICATION NAVIGATION
+
+Create a five-item bottom navigation bar:
+
+1. Home
+2. Transactions
+3. Add (+)
+4. Reports
+5. Settings
+
+The central Add button must open a quick-entry menu with:
+- Add Expense
+- Add Income
+- Add Transfer
+- Record Refund
+
+Provide a clear navigation hierarchy, consistent back-button behavior, loading states, empty states, and meaningful error messages.
+
+# 4. DETAILED SCREEN SPECIFICATIONS
+
+## Screen 1: Splash Screen and First Launch
+
+Display:
+- App icon and name.
+- Tagline: “Every Rupee Accounted For.”
+- Odia tagline: “ପ୍ରତ୍ୟେକ ଟଙ୍କାର ହିସାବ”
+- Loading indicator during initialization.
+
+On first launch, display onboarding screens explaining:
+- Daily expense recording.
+- Income and budget tracking.
+- Reports and savings analysis.
+- Offline storage and optional cloud backup.
+- PIN and biometric security.
+- English/Odia language selection.
+
+Do not require cloud registration to begin using the application.
+
+## Screen 2: Home Dashboard
+
+Create a clean financial dashboard with a selectable period: Today, This Week, This Month, and Custom Range.
+
+Display the following cards:
+
+1. Today's Expenditure
+2. Today's Income
+3. Monthly Expenditure
+4. Monthly Income
+5. Net Cash Flow
+6. Budget Remaining
+7. Savings Goal Progress
+
+Add:
+- Recent transactions.
+- Category-wise expenditure chart.
+- Income versus expenditure chart.
+- Daily spending trend.
+- Highest spending category.
+- Month-to-date budget utilization.
+- Smart financial insights.
+- Quick Add Expense and Add Income buttons.
+
+All figures must be calculated from actual saved transactions and selected reporting dates.
+
+For every amount, display the relevant period and whether it represents income, expenditure, a balance, or net cash flow.
+
+If no transactions exist, show a helpful empty state and a button to record the first transaction.
+
+Do not invent a starting bank balance. If the user wants to track available cash, allow them to enter an opening balance or create a cash account.
+
+## Screen 3: Add Expense
+
+Design a fast-entry form that allows a user to record an expense in a few taps.
+
+Required fields:
+- Amount in ₹.
+- Transaction date.
+- Category.
+
+Optional fields:
+- Time.
+- Payment account or payment method.
+- Merchant or payee.
+- Description.
+- Receipt photo.
+- Tags.
+- Family member.
+- Recurring expense schedule.
+
+Payment methods:
+- Cash.
+- UPI.
+- Debit Card.
+- Credit Card.
+- Bank Transfer.
+- Other.
+
+Default the date to the current local date and preselect the most recently used payment method where appropriate.
+
+Validation:
+- Amount must be greater than zero.
+- Amount must be a valid decimal monetary value.
+- Reject malformed input, NaN, infinity, and negative expense amounts.
+- Limit amounts to the application's documented supported maximum.
+- Display validation messages beside invalid fields.
+- Disable duplicate submission while a save operation is in progress.
+
+On successful save, persist the transaction before displaying success feedback. Update the dashboard and reports immediately.
+
+## Screen 4: Add Income
+
+Provide the following income categories:
+- Salary.
+- Business Income.
+- Freelance Income.
+- Interest.
+- Rental Income.
+- Pension.
+- Gift Received.
+- Other Income.
+
+Fields:
+- Amount in ₹.
+- Date and time.
+- Income category.
+- Received into account.
+- Source.
+- Description.
+- Optional attachment.
+
+Use the same validation, persistence, and error-handling rules as the expense form.
+
+## Screen 5: Transaction History
+
+Display a searchable, filterable list of all transactions.
+
+Each row must show:
+- Category icon.
+- Description or merchant.
+- Date.
+- Payment method.
+- Transaction type.
+- Amount in ₹.
+
+Use a clear, consistent visual distinction for income and expenditure without relying on color alone.
+
+Filtering options:
+- Today.
+- Yesterday.
+- This week.
+- This month.
+- Previous month.
+- This year.
+- Custom date range.
+- Income only.
+- Expenses only.
+- Transfers.
+- Refunds.
+- Category.
+- Payment method.
+- Family member.
+
+Search by description, merchant, notes, and category.
+
+Provide transaction details, edit, duplicate, and delete actions. Require confirmation before deleting.
+
+When editing or deleting a transaction, recalculate all affected dashboard values, budget totals, reports, and insights.
+
+Use pagination or lazy loading for large transaction histories.
+
+## Screen 6: Categories
+
+Provide default categories and custom category management.
+
+Expense categories:
+- Food and Groceries.
+- House Rent.
+- Electricity and Water.
+- Mobile and Internet.
+- Transportation and Fuel.
+- Education.
+- Medical and Healthcare.
+- Shopping.
+- Entertainment.
+- EMI and Loan Payments.
+- Insurance.
+- Family and Personal.
+- Travel.
+- Agriculture and Business.
+- Gifts and Donations.
+- Household Maintenance.
+- Other.
+
+Income categories:
+- Salary.
+- Business Income.
+- Freelance Income.
+- Interest.
+- Rental Income.
+- Pension.
+- Gifts Received.
+- Other Income.
+
+Users can:
+- Create custom categories.
+- Edit category names and icons.
+- Archive unused categories.
+- Assign categories to transactions.
+- Review historical spending by category.
+
+Never delete historical transaction records when a category is archived. Prevent deletion of a category that is still referenced unless transactions are safely reassigned.
+
+Support English and Odia category labels while preserving stable category identifiers.
+
+## Screen 7: Budget Management
+
+Allow users to create:
+- Overall monthly household budgets.
+- Category-wise monthly budgets.
+- Optional weekly budgets.
+- Daily spending limits.
+- Monthly savings targets.
+
+Each budget must contain:
+- Amount in ₹.
+- Start and end dates or reporting month.
+- Optional category.
+- Optional family member.
+- Alert thresholds.
+
+Default alert thresholds:
+- 80% of budget used.
+- 100% of budget used.
+- Budget exceeded.
+
+Allow users to customize thresholds and disable notifications.
+
+Display:
+- Budget amount.
+- Eligible expenditure.
+- Remaining budget.
+- Utilization percentage.
+- Progress bar.
+- Daily average spending.
+- Projected end-of-month spending where sufficient data exists.
+
+Formula:
+
+Remaining Budget = Budget Amount − Eligible Expenditure.
+
+A negative result indicates overspending.
+
+Budget calculations must exclude transfers and must apply the selected refund policy consistently.
+
+For monthly budgets, use the selected calendar month in the device's local timezone.
+
+## Screen 8: Reports and Analytics
+
+Provide report tabs:
+
+A. Daily Report  
+B. Weekly Report  
+C. Monthly Report  
+D. Yearly Report  
+E. Category Report  
+F. Payment Method Report  
+G. Budget Report  
+H. Family Member Report  
+I. Custom Date Range Report
+
+Every report must support:
+- Date-range selection.
+- Total income.
+- Total expenditure.
+- Net cash flow.
+- Refund totals where relevant.
+- Category breakdown.
+- Transaction count.
+- Export to PDF and CSV.
+
+### Daily report
+Show:
+- Total income.
+- Total expenditure.
+- Net cash flow.
+- Transaction list.
+- Spending by category.
+- Highest-value expense.
+- Comparison with the previous day.
+
+### Weekly report
+Show:
+- Seven-day expenditure trend.
+- Income versus expenditure.
+- Daily averages.
+- Highest-spending day.
+- Comparison with the previous week.
+
+Use clearly defined calendar-week boundaries and display the dates included.
+
+### Monthly report
+Show:
+- Total income.
+- Total expenditure.
+- Net cash flow.
+- Savings rate where meaningful.
+- Budget versus actual expenditure.
+- Category-wise spending.
+- Month-over-month comparison.
+- Daily spending chart.
+- Highest-spending day.
+- Recurring expenses.
+
+### Yearly report
+Show:
+- Total annual income.
+- Total annual expenditure.
+- Net cash flow.
+- Monthly income versus expenditure.
+- Monthly expenditure trend.
+- Highest and lowest expenditure months.
+- Annual category distribution.
+- Comparison with the previous year.
+
+### Category report
+For each category, display:
+- Total expenditure.
+- Percentage of total expenditure.
+- Transaction count.
+- Average transaction amount.
+- Comparison with the previous period.
+
+### Payment method report
+Display expenditure by cash, UPI, debit card, credit card, bank transfer, and other methods.
+
+Only classify transactions according to their recorded payment method. Do not imply that the app has independently verified bank or UPI transactions.
+
+## Screen 9: Smart Insights
+
+Generate understandable insights based exclusively on stored data.
+
+Examples:
+- “You spent ₹2,500 more on groceries than last month.”
+- “Transportation represents 18% of your expenditure.”
+- “You have used 85% of your monthly budget.”
+- “Your highest-spending day was 15-10-2026.”
+- “Your average daily expenditure this month is ₹450.”
+
+For each insight:
+- Identify the reporting period.
+- Explain the underlying comparison.
+- Use the correct currency format.
+- Avoid unsupported claims.
+- Suppress misleading insights when there is insufficient data.
+
+Any estimated saving must be explicitly described as a potential saving, not guaranteed.
+
+## Screen 10: Recurring Transactions and Bills
+
+Allow users to create recurring transactions with:
+- Amount.
+- Category.
+- Description.
+- Frequency: daily, weekly, monthly, or yearly.
+- Start date.
+- Optional end date.
+- Next due date.
+- Reminder settings.
+- Active/inactive status.
+
+Examples include rent, subscriptions, insurance premiums, and school fees.
+
+Recurring schedules must account for shorter months and leap years.
+
+Generate reminders locally. Do not silently post a transaction as paid simply because a due date has arrived.
+
+Require explicit confirmation or a clearly configured user-approved automatic entry rule. Prevent duplicate recurring entries.
+
+## Screen 11: Family Management
+
+The initial product is a personal and family expense tracker, not a full accounting platform.
+
+Support:
+- Household profile.
+- Family member names or nicknames.
+- Optional member-specific spending labels.
+- Shared household budgets.
+- Member-specific expenditure reports.
+- Household-level income and expenditure reports.
+
+Distinguish the person who recorded a transaction from the person associated with the expenditure.
+
+Family members may share a local device profile. For cloud sharing across different devices, implement authenticated household membership and server-side authorization.
+
+Do not make private family financial data visible to another account without explicit membership and consent.
+
+## Screen 12: Export and Backup
+
+Support:
+- Monthly PDF reports.
+- Custom-range PDF reports.
+- CSV transaction exports.
+- Optional spreadsheet-compatible exports.
+- Full data backup.
+- Data restoration.
+- Native file-sharing options.
+
+PDF reports should include:
+- App name.
+- Selected language.
+- Reporting period.
+- Generation date.
+- Income total.
+- Expenditure total.
+- Net cash flow.
+- Category table.
+- Daily or monthly chart where useful.
+- Transaction details where requested.
+- Page numbers.
+
+Use Indian number formatting consistently in every exported file.
+
+CSV files must use a documented schema, proper text escaping, UTF-8 encoding, and unambiguous dates.
+
+Use decimal-safe amounts and clearly document whether exports contain raw entries or report totals.
+
+For spreadsheet-compatible exports, guard against formula injection from untrusted text fields.
+
+## Screen 13: Settings and Security
+
+Include:
+- Language selection.
+- Theme selection.
+- PIN management.
+- Biometric lock.
+- Automatic lock timeout.
+- Notification settings.
+- Cloud backup settings.
+- Last successful backup.
+- Restore backup.
+- Export all data.
+- Privacy policy.
+- Delete local data.
+- Delete cloud data.
+- App version and diagnostics.
+
+Security requirements:
+- Never store a plaintext PIN.
+- Use a suitable password-based key derivation function with a unique salt for PIN verification.
+- Use secure platform storage for sensitive secrets.
+- Use Android BiometricPrompt or an approved Flutter biometric integration.
+- Use iOS LocalAuthentication or an approved Flutter biometric integration.
+- Require PIN fallback where configured.
+- Implement reasonable retry limits and increasing delays after failed PIN attempts.
+- Never store biometric templates in the app.
+- Protect sensitive content from unnecessary exposure in logs and recent-app previews where practical.
+
+Biometrics must not be represented as stronger than the underlying device authentication.
+
+# 5. DATABASE SCHEMA
+
+Use a relational database with migrations, foreign keys, unique identifiers, indexes, and transactional writes.
+
+Represent money using integer paise (`amount_paise`) wherever possible. One rupee equals 100 paise.
+
+Never store money using binary floating-point values for financial calculations.
+
+## 5.1 users
+
+- id: UUID primary key.
+- display_name.
+- preferred_language: `en` or `or`.
+- created_at.
+- updated_at.
+
+## 5.2 households
+
+- id: UUID primary key.
+- name.
+- owner_user_id.
+- created_at.
+- updated_at.
+
+## 5.3 household_members
+
+- id: UUID primary key.
+- household_id.
+- user_id, nullable for a local-only profile.
+- display_name.
+- role.
+- created_at.
+- archived_at, nullable.
+
+Enforce appropriate membership uniqueness and access restrictions.
+
+## 5.4 accounts
+
+- id: UUID primary key.
+- household_id.
+- name.
+- account_type: cash, bank, savings, credit_card, or other.
+- opening_balance_paise.
+- currency_code, fixed to INR.
+- created_at.
+- updated_at.
+- archived_at, nullable.
+
+Opening balances must be user-entered and clearly identified as opening balances rather than income.
+
+## 5.5 categories
+
+- id: UUID primary key.
+- household_id, nullable for system categories.
+- category_type: income or expense.
+- name_en.
+- name_or.
+- icon_key.
+- is_system.
+- is_active.
+- created_at.
+- updated_at.
+
+Use stable IDs so language changes do not break reports.
+
+## 5.6 transactions
+
+- id: UUID primary key.
+- household_id.
+- account_id, nullable where appropriate.
+- transaction_type: income, expense, transfer, or refund.
+- amount_paise: positive integer.
+- transaction_date.
+- created_at.
+- updated_at.
+- category_id, nullable for transfers.
+- payment_method.
+- merchant_or_source.
+- description.
+- notes.
+- family_member_id, nullable.
+- transfer_group_id, nullable.
+- refund_of_transaction_id, nullable.
+- receipt_path, nullable.
+- recurring_rule_id, nullable.
+- status: active or voided.
+- deleted_at, nullable.
+- sync_status.
+- device_id.
+- version.
+
+Enforce positive amounts, valid transaction types, and valid foreign keys.
+
+For transfers, create a linked debit and credit pair inside one database transaction, or use an equivalent transfer ledger that reliably preserves both sides.
+
+For refunds, retain the link to the original transaction where available.
+
+Do not represent a transfer as income or expenditure. Do not count a refund as new income unless the user explicitly records it as a separate income transaction.
+
+## 5.7 budgets
+
+- id: UUID primary key.
+- household_id.
+- category_id, nullable for the overall budget.
+- family_member_id, nullable.
+- period_type.
+- start_date.
+- end_date.
+- amount_paise.
+- warning_threshold_percent.
+- critical_threshold_percent.
+- is_active.
+- created_at.
+- updated_at.
+
+Prevent accidental duplicate active budgets for the same household, category, member, and period.
+
+## 5.8 recurring_rules
+
+- id: UUID primary key.
+- household_id.
+- transaction_type.
+- amount_paise.
+- category_id.
+- account_id, nullable.
+- description.
+- frequency.
+- interval_count.
+- start_date.
+- end_date, nullable.
+- next_due_date.
+- reminder_enabled.
+- auto_record_enabled.
+- is_active.
+- created_at.
+- updated_at.
+
+Store the last generated occurrence or a unique occurrence key to prevent duplicates.
+
+## 5.9 savings_goals
+
+- id: UUID primary key.
+- household_id.
+- title.
+- target_amount_paise.
+- target_date, nullable.
+- current_contribution_paise or a linked contribution ledger.
+- created_at.
+- updated_at.
+- is_active.
+
+If goals track contributions, implement them consistently so contributions do not become duplicate income or expenditure.
+
+## 5.10 attachments
+
+- id: UUID primary key.
+- transaction_id.
+- local_path or object key.
+- mime_type.
+- file_size.
+- created_at.
+- upload_status.
+
+Restrict attachment types and sizes. Treat receipt images as sensitive personal data.
+
+## 5.11 app_settings
+
+- id.
+- user_id.
+- language.
+- theme.
+- biometric_enabled.
+- auto_lock_timeout.
+- notification_preferences.
+- cloud_backup_enabled.
+- created_at.
+- updated_at.
+
+Never store raw PINs, cloud service secrets, or biometric data in this table.
+
+# 6. FINANCIAL CALCULATION ENGINE
+
+Create a dedicated, independently testable financial calculation service. Do not embed core financial formulas directly in UI widgets.
+
+All amounts must be calculated in integer paise or another exact decimal representation.
+
+## 6.1 Transaction classification
+
+Income:
+- Increases recorded income.
+- Increases net cash flow.
+
+Expense:
+- Increases expenditure.
+- Decreases net cash flow.
+
+Transfer:
+- Moves value between tracked accounts.
+- Does not change household income or expenditure.
+- Must not double-count the transfer as a new inflow or outflow.
+
+Refund:
+- Links to an earlier expense where possible.
+- Reduces net expenditure for the appropriate reporting calculation.
+- Must not be silently classified as salary or other income.
+
+Voided or deleted transactions:
+- Must be excluded from active totals.
+- Historical audit records must be retained where appropriate and disclosed in exports when relevant.
+
+## 6.2 Core formulas
+
+Total Income:
+
+Sum of active income transactions in the selected period.
+
+Gross Expenditure:
+
+Sum of active expense transactions in the selected period.
+
+Eligible Refunds:
+
+Sum of valid refunds linked to expenses, using the documented reporting-period policy.
+
+Net Expenditure:
+
+Gross Expenditure − Eligible Refunds.
+
+Net Cash Flow:
+
+Recognized Income − Net Expenditure.
+
+Available Account Balance:
+
+Opening Balance + Recognized Account Credits − Recognized Account Debits.
+
+Account balance calculations must include transfers and refunds according to the actual account ledger.
+
+Savings Rate:
+
+(Net Cash Flow ÷ Recognized Income) × 100, when recognized income is greater than zero.
+
+If income is zero, show “Not available” rather than dividing by zero.
+
+Average Daily Expenditure:
+
+Net Expenditure ÷ Number of calendar days in the selected reporting period.
+
+Also provide a separate active-day average if useful, clearly labelled as such.
+
+Budget Remaining:
+
+Budget Amount − Eligible Expenditure.
+
+Budget Utilization:
+
+(Eligible Expenditure ÷ Budget Amount) × 100, when budget amount is greater than zero.
+
+Month-over-Month Change:
+
+((Current Period Expenditure − Previous Period Expenditure) ÷ Previous Period Expenditure) × 100.
+
+If previous-period expenditure is zero, show an appropriate message instead of an undefined percentage.
+
+## 6.3 Refund reporting policy
+
+Use two distinct views where appropriate:
+
+1. Transaction-date view: displays expenses and refunds on the dates they occurred.
+2. Net spending view: links refunds to the relevant expense and reduces net expenditure according to a consistent policy.
+
+For cross-month refunds, make the selected policy explicit. Do not silently rewrite a closed month's original transaction history.
+
+## 6.4 Precision and rounding
+
+- Store amounts as integer paise.
+- Convert input strings into paise using validated decimal parsing.
+- Round only at defined display or export boundaries.
+- Use exact integer arithmetic for sums.
+- Check for overflow and reject values outside the supported range.
+- Never use floating-point values as the authoritative source of monetary totals.
+
+# 7. INDIAN CURRENCY FORMATTING SERVICE
+
+Implement one shared currency-formatting utility and use it across every screen, chart, PDF, CSV, notification, and test fixture.
+
+Preferred Dart formatting approach:
+
+`NumberFormat.currency(locale: 'en_IN', symbol: '₹', decimalDigits: 2)`
+
+Pass a correctly converted monetary value only after parsing and calculating the authoritative amount using exact paise.
+
+Verify Indian lakh/crore grouping explicitly with automated tests. If the selected formatting library does not produce the required grouping, implement a tested Indian-number formatter instead.
+
+Examples that must pass:
+- ₹0.00
+- ₹1.00
+- ₹999.00
+- ₹1,000.00
+- ₹12,500.00
+- ₹1,25,000.00
+- ₹12,34,567.00
+- ₹12,34,56,789.00
+
+Do not concatenate currency strings independently in individual widgets.
+
+All monetary inputs must accept sensible Indian user input, including optional decimal paise. Reject invalid group separators and malformed decimal strings with a helpful error message.
+
+# 8. ENGLISH AND ODIA LOCALIZATION
+
+Use Flutter's generated localization infrastructure with:
+- `app_en.arb`
+- `app_or.arb`
+
+Every visible user-facing label must have a localization key.
+
+Examples:
+
+| English | Odia |
+|---|---|
+| My Daily Khata | ମୋ ଦୈନିକ ଖାତା |
+| Home | ମୁଖ୍ୟ ପୃଷ୍ଠା |
+| Add Expense | ଖର୍ଚ୍ଚ ଯୋଡ଼ନ୍ତୁ |
+| Add Income | ଆୟ ଯୋଡ଼ନ୍ତୁ |
+| Transactions | ଲେନଦେନ |
+| Reports | ରିପୋର୍ଟ |
+| Monthly Budget | ମାସିକ ବଜେଟ୍ |
+| Total Income | ମୋଟ ଆୟ |
+| Total Expenditure | ମୋଟ ଖର୍ଚ୍ଚ |
+| Savings | ସଞ୍ଚୟ |
+| Remaining Budget | ବାକି ବଜେଟ୍ |
+| Save | ସଂରକ୍ଷଣ କରନ୍ତୁ |
+| Cancel | ବାତିଲ୍ କରନ୍ତୁ |
+| Delete | ଡିଲିଟ୍ କରନ୍ତୁ |
+| No Transactions | କୌଣସି ଲେନଦେନ ନାହିଁ |
+
+Review Odia translations for natural wording and consistency before release.
+
+Test Odia fonts, text wrapping, screen-reader labels, buttons, date displays, charts, and PDF exports.
+
+Language switching must never alter stored financial data.
+
+# 9. OFFLINE-FIRST STORAGE AND CLOUD SYNCHRONIZATION
+
+The application must work without an internet connection for all essential functions.
+
+Offline functionality includes:
+- Add, edit, and delete transactions.
+- View transaction history.
+- Calculate dashboard totals.
+- View reports.
+- Manage budgets.
+- Record refunds and transfers.
+- Generate reports from locally available data.
+
+## 9.1 Synchronization model
+
+Use the local database as the primary source for immediate UI updates.
+
+Maintain a durable synchronization queue with:
+- Record ID.
+- Operation type.
+- Entity type.
+- Local version.
+- Server version.
+- Retry status.
+- Last error.
+- Creation timestamp.
+
+Use stable UUIDs, idempotent writes, and server-side constraints to prevent duplicate records.
+
+When the internet returns:
+1. Authenticate the user.
+2. Upload pending local changes.
+3. Download authorized remote changes.
+4. Resolve conflicts.
+5. Update synchronization metadata.
+6. Recalculate affected reports.
+7. Display the last successful sync time.
+
+Do not overwrite newer data silently.
+
+For concurrent edits, implement a documented conflict policy. Preserve recoverable data and offer a conflict review where needed.
+
+## 9.2 Backup and restore
+
+Provide:
+- Manual backup.
+- Optional automatic backup.
+- Last backup status.
+- Restore confirmation.
+- Backup failure messages.
+- Full export before destructive operations.
+
+Never delete local data just because a cloud upload succeeded.
+
+Never assume that signing out should erase locally stored data. Explain the consequences and ask for confirmation before removing data.
+
+## 9.3 Cloud security
+
+Configure Supabase Row Level Security on every user-accessible table.
+
+Enforce household membership for shared records and object-level authorization for receipt attachments.
+
+Test unauthorized access attempts, cross-household queries, token expiration, and failed uploads.
+
+Use authenticated, short-lived access to sensitive attachments where supported.
+
+# 10. PIN AND BIOMETRIC SECURITY
+
+Implement an application-lock screen that appears:
+- On first launch when security is enabled.
+- After the configured inactivity timeout.
+- When returning from the background, according to settings.
+
+Allow users to:
+- Set and change a PIN.
+- Enable biometric unlocking.
+- Use PIN fallback.
+- Configure automatic locking.
+- Recover access through a documented, secure recovery process when cloud accounts are enabled.
+
+For local-only accounts, clearly explain that a forgotten PIN may not be recoverable without the configured recovery method.
+
+Avoid logging sensitive financial values on the lock screen or in notification previews by default.
+
+Security must not depend solely on hiding screens in the UI. Protect sensitive cloud records through server-side authorization.
+
+# 11. VISUAL DESIGN SYSTEM
+
+Use a modern, professional financial application style.
+
+### Layout
+- Material 3.
+- Responsive mobile layouts.
+- Rounded cards with restrained elevation.
+- Clear typography.
+- Consistent spacing.
+- Large touch targets.
+- Bottom navigation.
+- Accessible forms and dialogs.
+
+### Color semantics
+- Green: income and positive cash flow.
+- Red: expenditure or negative cash flow.
+- Orange: warnings and budget alerts.
+- Neutral colors: ordinary text and background.
+- Use text labels, icons, and chart legends in addition to color.
+
+### Themes
+- Light.
+- Dark.
+- System default.
+
+### Accessibility
+- Screen-reader-friendly controls.
+- Scalable text.
+- Adequate contrast.
+- Logical focus order.
+- No reliance on color alone.
+- Correct Odia glyph rendering.
+
+# 12. REPORT EXPORT IMPLEMENTATION
+
+Create a report service separate from the UI.
+
+PDF generation must:
+- Use a readable font that supports Odia.
+- Embed or bundle appropriate fonts when licensing permits.
+- Format all amounts in INR.
+- Include the selected date range and generation timestamp.
+- Handle page breaks and long transaction lists.
+- Use consistent totals across pages.
+
+CSV generation must:
+- Use UTF-8.
+- Include headers.
+- Quote and escape fields correctly.
+- Use an unambiguous date representation.
+- Include transaction type and amount.
+- Preserve refund and transfer classifications.
+- Prevent spreadsheet formula injection.
+
+Example CSV fields:
+
+`Transaction ID, Date, Type, Category, Description, Amount INR, Payment Method, Family Member`
+
+Document whether a CSV contains signed amounts or positive amounts with a separate transaction-type field. Prefer positive amounts with an explicit type field for clarity.
+
+# 13. AUTOMATED TESTING AND ACCEPTANCE CRITERIA
+
+The application is not complete until all critical tests pass.
+
+## 13.1 Currency tests
+
+Verify:
+- ₹1,000.00 is formatted correctly.
+- ₹12,500.00 is formatted correctly.
+- ₹1,25,000.00 is formatted correctly.
+- ₹12,34,567.00 is formatted correctly.
+- ₹12,34,56,789.00 is formatted correctly.
+- Decimal paise are preserved.
+- Negative cash flow is clearly labelled.
+- No foreign currency appears in the application.
+
+## 13.2 Financial calculation tests
+
+Test the following scenario:
+
+Transactions:
+- Salary income: ₹30,000.
+- Grocery expenditure: ₹2,500.
+- Electricity expenditure: ₹1,500.
+- Transportation expenditure: ₹1,000.
+
+Expected results:
+- Total income: ₹30,000.
+- Gross expenditure: ₹5,000.
+- Net cash flow: ₹25,000.
+- Savings rate: approximately 83.33%.
+
+Add a valid ₹500 refund linked to the grocery expense.
+
+Expected net expenditure under the linked-refund policy:
+- ₹4,500.
+
+Expected net cash flow:
+- ₹25,500.
+
+Verify that the refund does not appear as salary or unrelated income.
+
+## 13.3 Budget tests
+
+Given a monthly budget of ₹10,000:
+- Expenditure of ₹8,000 must show 80% utilization.
+- Expenditure of ₹10,000 must show 100% utilization.
+- Expenditure of ₹12,000 must show ₹2,000 overspending.
+- A zero-value budget must not cause division-by-zero errors.
+
+## 13.4 Transaction tests
+
+Verify:
+- Adding an expense updates the dashboard.
+- Editing an expense updates every affected report.
+- Deleting or voiding a transaction removes it from active totals.
+- Duplicate submissions do not create duplicate entries.
+- Transfers do not inflate income or expenditure.
+- Refunds remain linked to the correct expense.
+- Archived categories do not erase historical records.
+
+## 13.5 Date tests
+
+Verify:
+- Month-end transactions.
+- December-to-January transitions.
+- Leap-year dates.
+- Different month lengths.
+- Custom date ranges.
+- Timezone changes.
+- Local-midnight boundaries.
+- Calendar-week boundaries.
+
+Store timestamps in a consistent form and derive reporting periods using the user's selected local timezone.
+
+## 13.6 Offline and cloud tests
+
+Verify:
+- The app launches in airplane mode.
+- Transactions can be saved offline.
+- Data survives an app restart.
+- Pending changes sync after connectivity returns.
+- Repeated synchronization does not duplicate transactions.
+- Simultaneous edits follow the documented conflict policy.
+- Failed uploads can be retried.
+- Unauthorized users cannot read another household's records.
+
+## 13.7 Security tests
+
+Verify:
+- PIN is never stored in plaintext.
+- Failed PIN attempts are handled safely.
+- Biometric cancellation allows configured PIN fallback.
+- Cloud authorization is enforced server-side.
+- Receipt attachments cannot be accessed by unauthorized users.
+- Deleting a cloud account does not silently leave undisclosed remote data.
+
+## 13.8 Export tests
+
+Verify:
+- PDF totals equal dashboard totals for the same reporting period.
+- CSV totals reconcile with the underlying transactions.
+- Odia labels render correctly.
+- Large exports handle pagination.
+- Special characters in descriptions do not corrupt CSV files.
+- Refund and transfer treatment is consistent.
+- Exporting does not modify the database.
+
+# 14. DEVELOPMENT MILESTONES
+
+Implement in the following order.
+
+**Milestone 1 — Project foundation**
+- Flutter project.
+- Navigation.
+- Theme.
+- English/Odia localization.
+- Database and migrations.
+
+**Milestone 2 — Transaction engine**
+- Income and expenses.
+- Categories.
+- Editing and deletion.
+- Exact monetary calculations.
+- Currency formatting.
+
+**Milestone 3 — Dashboard and reports**
+- Dashboard cards.
+- Charts.
+- Daily, monthly, and yearly reports.
+- Budget tracking.
+
+**Milestone 4 — Family and recurring expenses**
+- Household profiles.
+- Family member labels.
+- Recurring rules.
+- Reminders.
+
+**Milestone 5 — Export and backup**
+- PDF.
+- CSV.
+- Local backup.
+- Optional cloud synchronization.
+
+**Milestone 6 — Security**
+- PIN.
+- Biometrics.
+- Secure storage.
+- Cloud authorization.
+- Privacy controls.
+
+**Milestone 7 — Quality assurance**
+- Automated tests.
+- Accessibility checks.
+- Offline tests.
+- Security review.
+- Performance optimization.
+
+**Milestone 8 — Release**
+- Android release build.
+- iOS release build.
+- Installation instructions.
+- User guide.
+- Deployment documentation.
+
+At each milestone, ensure the code compiles and the completed functionality works before continuing.
+
+# 15. REQUIRED PROJECT DELIVERABLES
+
+Deliver the following:
+
+1. Complete Flutter source code.
+2. Android and iOS project configuration.
+3. Database schema and migration files.
+4. Supabase schema, authorization policies, and setup instructions.
+5. English and Odia translation files.
+6. Currency-formatting service.
+7. Financial calculation service.
+8. Dashboard and reporting screens.
+9. PDF and CSV export services.
+10. PIN and biometric security.
+11. Automated unit, widget, and integration tests.
+12. Sample data for demonstration, clearly separated from real user data.
+13. README with setup instructions.
+14. Android build instructions.
+15. iOS build instructions.
+16. Privacy and backup documentation.
+17. A list of known limitations and unimplemented features.
+
+Do not claim that a feature is complete unless its implementation and tests support that claim.
+
+# 16. PLATFORM-SPECIFIC BUILD INSTRUCTIONS
+
+## Android
+
+Configure:
+- A unique application ID.
+- Appropriate minimum and target SDK versions.
+- Android permissions only where needed.
+- Secure release signing.
+- App icon and launch screen.
+- Biometric capability declarations where required.
+- File-sharing configuration for exports.
+- Notification permissions and channels where required.
+
+Build and verify a debug APK:
+
+`flutter pub get`
+
+`flutter analyze`
+
+`flutter test`
+
+`flutter build apk --debug`
+
+Build a release APK:
+
+`flutter build apk --release`
+
+Build an Android App Bundle for Play Store submission:
+
+`flutter build appbundle --release`
+
+Configure release signing through secure environment configuration or a protected key file. Never commit signing passwords or private keys to source control.
+
+Test installation, offline operation, PIN lock, biometric unlocking, notifications, file export, and backup restoration on a real Android device.
+
+## iOS
+
+Use macOS with a compatible Xcode installation.
+
+Configure:
+- A unique bundle identifier.
+- Appropriate iOS deployment target.
+- App icons and launch screen.
+- Face ID/Touch ID usage descriptions as required.
+- Secure Keychain access.
+- Local notification permissions where needed.
+- Document export and sharing.
+- App signing and provisioning profiles.
+
+Install dependencies:
+
+`flutter pub get`
+
+Run static analysis and tests:
+
+`flutter analyze`
+
+`flutter test`
+
+Build the iOS project:
+
+`flutter build ios --release`
+
+Build an IPA when signing and distribution configuration is available:
+
+`flutter build ipa --release`
+
+Test on a real iPhone or supported simulator. Verify biometric behavior, secure storage, offline transaction entry, report export, backup and restore, and localization.
+
+An iOS release requires macOS/Xcode and appropriate Apple signing and distribution credentials. Do not claim to have generated or signed an iOS release unless that has actually been completed.
+
+## Supabase setup
+
+Provide:
+- Database migration scripts.
+- Table definitions.
+- Row Level Security policies.
+- Authentication configuration.
+- Storage bucket policies for receipts.
+- Backup and recovery instructions.
+- Environment variable documentation.
+- Development and production environment separation.
+
+Use only public client configuration intended for mobile applications. Never embed a Supabase service-role key or equivalent administrative secret in the mobile application.
+
+Document how to create and configure the backend before enabling cloud backup.
+
+# 17. FINAL DEFINITION OF DONE
+
+The project is complete only when:
+
+- The application runs on the target platform.
+- Users can record and edit daily income and expenses.
+- Data persists across restarts.
+- The core app works offline.
+- INR is the only supported currency.
+- Indian number formatting is correct everywhere.
+- English and Odia interfaces work.
+- PIN and biometric protection work as configured.
+- Budgets and reports reconcile with saved transactions.
+- Refunds and transfers do not distort totals.
+- PDF and CSV exports match the selected reporting period.
+- Cloud synchronization is secure and duplicate-safe.
+- Critical automated tests pass.
+- Build instructions have been verified.
+- Known limitations are documented.
+
+**Begin by generating the complete project structure, dependency configuration, database schema, localization foundation, and financial calculation service. Then implement each milestone in order, running the relevant tests before proceeding.**
